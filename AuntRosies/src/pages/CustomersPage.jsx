@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import { API_URL } from "../config";
 import Table from "../components/Table";
 
 function CustomersPage() {
     const [customers, setCustomers] = useState([]);
 
     useEffect(() => {
-        fetch("/api/customers")
+        fetch(`${API_URL}/api/customers`)
             .then((res) => res.json())
             .then((data) => setCustomers(data))
             .catch((err) => console.error("Error loading customers:", err));

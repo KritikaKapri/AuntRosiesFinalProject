@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "./Table";
+import { API_URL } from "../config";
 
 function SalesForm() {
     const navigate = useNavigate();
@@ -26,7 +27,7 @@ function SalesForm() {
     const authFetch = async (url, options = {}) => {
         const token = localStorage.getItem("token");
 
-        const res = await fetch(url, {
+        const res = await fetch(`${API_URL}${url}`, {
             ...options,
             headers: {
                 ...(options.headers || {}),

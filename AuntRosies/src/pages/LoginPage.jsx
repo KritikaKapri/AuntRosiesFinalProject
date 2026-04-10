@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ function LoginPage() {
         setMessage("");
 
         try {
-            const res = await fetch("/api/login", {
+            const res = await fetch(`${API_URL}/api/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -82,8 +83,6 @@ function LoginPage() {
                         </button>
                     </div>
                 </form>
-
-
             </div>
         </div>
     );

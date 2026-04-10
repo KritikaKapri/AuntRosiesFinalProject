@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "./Table";
+import { API_URL } from "../config";
 
 function RecipeForm() {
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ function RecipeForm() {
     const authFetch = async (url, options = {}) => {
         const token = localStorage.getItem("token");
 
-        const res = await fetch(url, {
+        const res = await fetch(`${API_URL}${url}`, {
             ...options,
             headers: {
                 ...(options.headers || {}),

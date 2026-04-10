@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "./Card";
 import Table from "./Table";
+import { API_URL } from "../config"; // 👈 import here
 
 function Dashboard() {
     const navigate = useNavigate();
@@ -14,25 +15,34 @@ function Dashboard() {
         upcomingBatches: "0"
     });
 
-    useEffect(() => {
+    const authFetch = async (url, options = {}) => {
         const token = localStorage.getItem("token");
 
-        fetch("/api/dashboard", {
+        const res = await fetch(`${API_URL}${url}`, {
+            ...options,
             headers: {
+                ...(options.headers || {}),
                 Authorization: `Bearer ${token}`
             }
-        })
-            .then((res) => {
-                if (res.status === 401) {
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("user");
-                    navigate("/");
-                    return null;
-                }
-                return res.json();
-            })
-            .then((data) => {
-                if (!data) return;
+        });
+
+        if (res.status === 401) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            navigate("/");
+            return null;
+        }
+
+        return res;
+    };
+
+    useEffect(() => {
+        const loadDashboard = async () => {
+            try {
+                const res = await authFetch("/api/dashboard");
+                if (!res) return;
+
+                const data = await res.json();
 
                 setLowStock(data.lowStock || []);
                 setRecentBatches(data.recentBatches || []);
@@ -43,8 +53,12 @@ function Dashboard() {
                         upcomingBatches: "0"
                     }
                 );
-            })
-            .catch((err) => console.error("Error loading dashboard:", err));
+            } catch (err) {
+                console.error("Error loading dashboard:", err);
+            }
+        };
+
+        loadDashboard();
     }, [navigate]);
 
     return (

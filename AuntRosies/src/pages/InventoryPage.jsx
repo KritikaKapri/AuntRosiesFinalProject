@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
 import Table from "../components/Table";
 
 function InventoryPage() {
@@ -19,7 +20,7 @@ function InventoryPage() {
     const authFetch = async (url, options = {}) => {
         const token = localStorage.getItem("token");
 
-        const res = await fetch(url, {
+        const res = await fetch(`${API_URL}${url}`, {
             ...options,
             headers: {
                 ...(options.headers || {}),
